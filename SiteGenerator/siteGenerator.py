@@ -47,7 +47,7 @@ def configureDatabase(dbType, siteName):
 
 
 
-def initialSettingsSetup(siteName):
+def initialSettingsSetup(siteName, timeZone):
     settingsPath = sitesFolder +"/" + siteName + "/" + siteName + "/settings.py"
 
     pathInfo =  '''import os
@@ -58,10 +58,9 @@ PATH_TO_APP = os.path.dirname(os.path.dirname(PATH_TO_FILE))
     insertBeginning(settingsPath, pathInfo)
     
     # Changes TIME_ZONE
-    databaseString = """'ENGINE': 'django.db.backends.', # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'."""
-    newDatabaseString = """'ENGINE': 'django.db.backends.""" + dbType + """', # THIS LINE WAS EDITED BY SITEGENERATOR
-    """
-    replaceAll(settingsPath, databaseString, newDatabaseString)
+    time_zone = """TIME_ZONE = 'America/Chicago'"""
+    newTime_zone = """TIME_ZONE = 'America/""" + timeZone + """' # THIS LINE WAS EDITED BY SITEGENERATOR"""
+    replaceAll(settingsPath, time_zone, newTime_zone)
     
 
 def insertBeginning(path, insertString):
@@ -79,5 +78,5 @@ def replaceAll(path,searchExp,replaceExp):
 
 name = "DylansFirst"
 startDjangoProject(name)
-initialSettingsSetup(name)
+initialSettingsSetup(name, 'New_York')
 configureDatabase("sqlite3", name)
