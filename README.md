@@ -13,4 +13,8 @@ settings.py: Configure Templates
 
 settings.py: Configure Media
 
-settings.py: Configure Time Zone
+~~settings.py: Configure Time Zone~~
+
+Themes
+
+Base.py
