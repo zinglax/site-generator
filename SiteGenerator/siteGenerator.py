@@ -23,6 +23,7 @@ def start_django_project(name):
     
     siteFolder = dname + '/sites/' + name 
     
+
     if ensure_dir(siteFolder):
         # Runs Django Start Project command
         command = "django-admin.py startproject " + name
@@ -64,13 +65,24 @@ PATH_TO_APP = os.path.dirname(os.path.dirname(PATH_TO_FILE))
     
 
 def setup_media(siteName):
-    settingsPath = sitesFolder +"/" + siteName + "/" + siteName + "/settings.py"
+    siteFolder = sitesFolder +"/" + siteName + "/" + siteName
+    settingsPath = siteFolder + "/settings.py"
+    media_folder = siteFolder + "/media"
     
-    # Changes Type Of Database
-    databaseString = """'ENGINE': 'django.db.backends.', # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'."""
-    newDatabaseString = """'ENGINE': 'django.db.backends.""" + dbType + """', # THIS LINE WAS EDITED BY SITEGENERATOR
-    """
-    replaceAll(settingsPath, databaseString, newDatabaseString)
+    # Changes Media Root
+    old_media_root = """MEDIA_ROOT = ''"""
+    new_media_root =  'MEDIA_ROOT = PATH_TO_FILE + "/media" # THIS LINE WAS EDITED BY SITEGENERATOR'
+    replaceAll(settingsPath, old_media_root, new_media_root)
+    
+    # Changes media url
+    old_media = "MEDIA_URL = ''"
+    new_media = "MEDIA_URL =  '/media/' # THIS LINE WAS EDITED BY SITEGENERATOR"
+    replaceAll(settingsPath, old_media, new_media)
+    
+    # Create Media Folder
+    if not ensure_dir(media_folder):
+        os.makedirs(media_folder)
+
     
 
 def file_insert_beginning(file_name, insertString):
@@ -96,3 +108,4 @@ name = "DylansFirst"
 start_django_project(name)
 setup_initial(name, 'New_York')
 setup_database("sqlite3", name)
+setup_media(name)
