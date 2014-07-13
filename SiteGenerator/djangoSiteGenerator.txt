@@ -1,0 +1,26 @@
+#####################
+Django Notes for Auto-SiteGenerator
+#####################
+
+This is a site that is designed to display elements/features/design patterns for a website that are in my relm of capabilities
+
+Take what you know and sell it. Make this site in to a fucking kiaosk of website generation efficiency.  No one wants to manage there site through only a computer. Know how to sell things in a store just like your customer wants to do with their site that your building for them. I should be the one that uses the tool the most. Make your own sites, fake sites and then sell them one the boarders, the edges, the buttons, this one has been popular, people like this, or this feature is really nice see here. Everyone should be able to say 'hey I want my own ebay, I'm selling my own crap like this, I want to do it like this can you make it happen?...' Yes. You can and here is how you do it. you hand them a tablet, you let them choose as you gather input in the site you are making.
+
+3 Steps to making your own website
+
+1. Purpose - What does this site do, will it make your money, is it just informative, does it sell your product or just advertise
+
+If it is a site that seems like it will be more for looks you will have a person that wants to see visual features, flashy design pages and things that please the eye. If the person says they want a website that for their business perfect, we can help you sell your business. Focus on aspects like Payment methods and displaying the product to their potential customers
+
+2. Layout - How is this site going to be set up, what do you want your users to do while they are on your site.
+
+The flow of the site is imperative to getting the purson to buy into the sites intentions. what does the navigation for the site look like, what does the user click to get around, forward and backward is there a main grid, is it one long scrolling page or do they just swipe to get to what they want. 
+
+3. Design - This is the color scheme, the css, the pop or wow factor of the page. 
+
+The amount of time spent on this topic will show how much the person just wants something to look good versus something that serves a purpose. Advertising for their business is awesome, those are the bread and butter. If we can display something for you and link things for you great, thats awesome just pay me for hosting and we can work something out that looks like what you want. If the person seems to have an application idea your going to have to be a little more crafty. 
+
+
+
+## To Start django Project
+django-admin.py startproject mysite
