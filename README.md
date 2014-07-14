@@ -9,11 +9,19 @@ TODO:
 
 ~~settings.py: Configure Database~~
 
-settings.py: Configure Templates
+~~settings.py: Configure Templates~~
 
-settings.py: Configure Media
+~~settings.py: Configure Media~~
 
 ~~settings.py: Configure Time Zone~~
+
+settings.py: Configure static files
+
+Sync Database 
+
+Create Application
+
+Adding a Page
 
 Themes
 
