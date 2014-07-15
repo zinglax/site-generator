@@ -127,7 +127,7 @@ def generate_site(name, time_zone, database_type):
     setup_templates(name)    
 
 '''
-name = "DylansFirst"
+name = "raw"
 start_django_project(name)
 setup_initial(name, 'New_York')
 setup_database("sqlite3", name)

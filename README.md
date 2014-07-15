@@ -17,6 +17,10 @@ TODO:
 
 settings.py: Configure static files
 
+~~Test for matching settings.py file~~
+
+Test for matching directory structure
+
 Sync Database 
 
 Create Application
