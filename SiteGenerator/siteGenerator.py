@@ -8,10 +8,11 @@ import fileinput
 import sys
 abspath = os.path.abspath(__file__)
 dname = os.path.dirname(abspath)
-sitesFolder = dname + '/sites'
+sitesFolder = dname + '/sites/'
 
 
 def ensure_dir(f):
+    'makes sure directory or file exists'
     if not os.path.exists(f):
         return True
     return False
@@ -19,11 +20,10 @@ def ensure_dir(f):
 
 def start_django_project(name):
     # Changes directory to Sites
-    os.chdir(dname + '/sites')
+    os.chdir(sitesFolder)
     
-    siteFolder = dname + '/sites/' + name 
+    siteFolder = sitesFolder + name 
     
-
     if ensure_dir(siteFolder):
         # Runs Django Start Project command
         command = "django-admin.py startproject " + name
@@ -31,7 +31,36 @@ def start_django_project(name):
         print "## NEW SITE CREATED: " + name
     else:
         print "## SITE ALREADY EXISTS. NOTHING CREATED"
+
+def start_django_app(site_name, app_name):
+    '''Creates the django application for a specific site'''
+    # Changes directory to new site   
     
+    settingsPath = sitesFolder +"/" + site_name + "/" + site_name + "/settings.py"        
+    
+    siteFolder = sitesFolder + site_name
+    appFolder = sitesFolder + site_name + "/" + app_name
+    
+    os.chdir(siteFolder)
+    
+    if  not ensure_dir(siteFolder):
+        if ensure_dir(appFolder):
+            # Site has already been created, create the App!
+            command = "python manage.py startapp " + app_name
+            os.system(command)   
+            
+            old_app_string = """    # Uncomment the next line to enable admin documentation:
+    # 'django.contrib.admindocs',"""
+            
+            new_app_string = "    '" + app_name + "',"
+            
+            replaceAll(settingsPath, old_app_string, new_app_string)
+            
+        else:
+            print "## App already exists in site"
+    else:
+        print "## SITE ALREADY EXISTS. NOTHING CREATED"
+        
 
 def setup_database(dbType, siteName):
     settingsPath = sitesFolder +"/" + siteName + "/" + siteName + "/settings.py"
@@ -88,7 +117,6 @@ def setup_templates(siteName):
     settingsPath = siteFolder + "/settings.py"     
     template_folder = siteFolder + "/templates"
     
-    
     old_templates = '# Put strings here, like "/home/html/django_templates" or "C:/www/django/templates".'
     new_templates = "os.path.join(PATH_TO_FILE, 'templates'),  # THIS LINE WAS EDITED BY SITEGENERATOR"
     
@@ -97,7 +125,6 @@ def setup_templates(siteName):
     # Create Templates Folder
     if ensure_dir(template_folder):
         os.makedirs(template_folder)    
-    
 
 def file_insert_beginning(file_name, insertString):
     ''' Inserts someting in the begining of the file'''
@@ -119,8 +146,9 @@ def replaceAll(file_name,searchExp,replaceExp):
         sys.stdout.write(line)
 
 
-def generate_site(name, time_zone, database_type):
+def generate_site(name, app_name, time_zone, database_type):
     start_django_project(name)
+    start_django_app(name, app_name)
     setup_initial(name, time_zone)
     setup_database(database_type, name)
     setup_media(name)
@@ -134,3 +162,10 @@ setup_database("sqlite3", name)
 setup_media(name)
 setup_templates(name)
 '''
+
+if __name__ == '__main__':
+    s_n = raw_input("Enter a Site Name: ")
+    app_name = raw_input("Enter an App Name: ")
+    t_z = raw_input("Enter a Time Zone (ex. New_York): ")
+    db = raw_input("Enter a Database Type (ex. sqlite3): ")
+    generate_site(s_n, app_name, t_z, db)

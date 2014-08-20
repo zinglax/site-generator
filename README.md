@@ -23,7 +23,7 @@ Test for matching directory structure
 
 Sync Database 
 
-Create Application
+~~Create Application~~
 
 Adding a Page
 
