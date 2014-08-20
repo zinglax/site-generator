@@ -49,8 +49,7 @@ def start_django_app(site_name, app_name):
             command = "python manage.py startapp " + app_name
             os.system(command)   
             
-            old_app_string = """    # Uncomment the next line to enable admin documentation:
-    # 'django.contrib.admindocs',"""
+            old_app_string = """    # 'django.contrib.admindocs',"""
             
             new_app_string = "    '" + app_name + "',"
             
