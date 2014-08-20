@@ -125,6 +125,21 @@ def setup_templates(siteName):
     if ensure_dir(template_folder):
         os.makedirs(template_folder)    
 
+def setup_static(sitename):
+    siteFolder = sitesFolder +"/" + sitename + "/" + sitename
+    settingsPath = siteFolder + "/settings.py"     
+    static_folder = siteFolder + "/static"
+    
+    old_static = '    # Put strings here, like "/home/html/static" or "C:/www/django/static".'
+    new_static = '    PATH_TO_FILE + "/static",'
+    
+    replaceAll(settingsPath, old_static, new_static)
+    
+    # Create Static Folder
+    if ensure_dir(static_folder):
+        os.makedirs(static_folder)    
+    
+
 def file_insert_beginning(file_name, insertString):
     ''' Inserts someting in the begining of the file'''
     for line in fileinput.input(file_name, inplace=1):
@@ -151,7 +166,8 @@ def generate_site(name, app_name, time_zone, database_type):
     setup_initial(name, time_zone)
     setup_database(database_type, name)
     setup_media(name)
-    setup_templates(name)    
+    setup_templates(name)
+    setup_static(name)
 
 '''
 name = "raw"

@@ -15,7 +15,7 @@ TODO:
 
 ~~settings.py: Configure Time Zone~~
 
-settings.py: Configure static files
+~~settings.py: Configure static files~~
 
 ~~Test for matching settings.py file~~
 
