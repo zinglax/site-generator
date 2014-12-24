@@ -21,6 +21,19 @@ The flow of the site is imperative to getting the purson to buy into the sites i
 The amount of time spent on this topic will show how much the person just wants something to look good versus something that serves a purpose. Advertising for their business is awesome, those are the bread and butter. If we can display something for you and link things for you great, thats awesome just pay me for hosting and we can work something out that looks like what you want. If the person seems to have an application idea your going to have to be a little more crafty. 
 
 
+# Site Generator 
+```
+$ python siteGenerator.py
+Enter a Site Name: new-site
+Enter an App Name: new-app
+Enter a Time Zone (ex. New_York): New_York
+Enter a Database Type (ex. sqlite3): sqlite3
+## NEW SITE CREATED: BLOB
+```
+
 
 ## To Start django Project
-django-admin.py startproject mysite
+$ django-admin.py startproject mysite
+
+## Start app 
+$ python manage.py startapp
