@@ -80,9 +80,10 @@ def setup_database(dbType, siteName):
     replaceAll(settingsPath, databaseString, newDatabaseString)
 
 
-def setup_initial(siteName, timeZone):
+def setup_initial(siteName, app_name, timeZone):
     siteNameApp_folder = sitesFolder +"/" + siteName + "/" + siteName
     settingsPath = siteNameApp_folder + "/settings.py"
+    appfolder = sitesFolder +"/" + siteName + "/" + app_name
 
     # Inserting Path Info to settings.py
     pathInfo =  '''import os
@@ -104,7 +105,7 @@ from django.core.urlresolvers import reverse
 from django.shortcuts import render_to_response
 from django.http import HttpResponseRedirect, HttpResponse, QueryDict
 """
-    with open(siteNameApp_folder + "/views.py", 'w+') as views_py:
+    with open(appfolder + "/views.py", 'w+') as views_py:
         views_py.write(view_py_string)
     
     
@@ -144,10 +145,6 @@ def setup_templates(siteName, app_name):
     if ensure_dir(template_folder):
         os.makedirs(template_folder)
         
-    # Creates the sites template folder
-    if ensure_dir(site_app_template_folder):
-            os.makedirs(site_app_template_folder)    
-        
     # Creates the app template folder
     if ensure_dir(app_template_folder):
             os.makedirs(app_template_folder)    
@@ -175,9 +172,11 @@ def file_insert_beginning(file_name, insertString):
         sys.stdout.write(line)           
 
 def file_insert_end(file_name, insert_string):
-    for line in fileinput.input(file_name, inplace=1):
-        sys.stdout.write(line)
-    sys.stdout.write(insert_string)
+    data = None
+    with open (file_name, "r+") as myfile:
+        data=myfile.read()              
+        data = data + insert_string         
+        myfile.write(data)
             
 
 def replaceAll(file_name,searchExp,replaceExp):
@@ -204,7 +203,7 @@ def generate_site():
     # Initial project and app creation, settings.py configuration (static, media, templates)
     start_django_project(name)
     start_django_app(name, app_name)    
-    setup_initial(name, time_zone)
+    setup_initial(name, app_name, time_zone)
     setup_database(database_type, name)    
     setup_media(name)
     setup_templates(name, app_name)
@@ -215,8 +214,7 @@ def generate_site():
     if decision in {'Y','yes','Yes','YES',"ya","yeah",'y'}:
         print "You decided to setup a theme and homepage, sweet!"
         theme_path = raw_input("Enter the where your theme .zip file is (the one Downloaded from ThemeRoller): ")
-        setup_theme_and_homepage(name, 
-                            theme_path)
+        setup_theme_and_homepage(name, app_name, theme_path)
 
 '''
 name = "raw"
@@ -227,9 +225,10 @@ setup_media(name)
 setup_templates(name)
 '''
 
-def setup_theme_and_homepage(sitename, path_to_theme_zip):
+def setup_theme_and_homepage(sitename, app_name, path_to_theme_zip):
     siteFolder = sitesFolder +"/" + sitename + "/" + sitename
     static_folder = siteFolder + "/static"
+    app_folder = sitesFolder +"/" + sitename + "/" + app_name
     
     # extract theme zip file in static folder
     command = "unzip " + path_to_theme_zip + " -d " + static_folder
@@ -257,17 +256,17 @@ def setup_theme_and_homepage(sitename, path_to_theme_zip):
 urlpatterns = patterns('',"""
     insert = """
     url(r'^$', '%s.views.home', name='home'),
-    """ % sitename
+    """ % app_name
     file_insert_after(siteFolder + "/urls.py", search, 
                      insert)
 
     # Edits views.py to add home page method 
     home_method = """\n\ndef home(request):
   return render_to_response("home/home.html", script_args)"""
-    file_insert_end(siteFolder + "/views.py", home_method)
+    file_insert_end(app_folder + "/views.py", home_method)
 
     # Create Basic home.html page
-    home_html_file = siteFolder + "/templates/" + sitename + "/home.html"
+    home_html_file = siteFolder + "/templates/" + app_name + "/home.html"
     with open(home_html_file, "w+") as homeHTML:
         homeCode = """<html>
 <head>
