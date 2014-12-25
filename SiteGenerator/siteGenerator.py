@@ -95,7 +95,7 @@ PATH_TO_APP = os.path.dirname(os.path.dirname(PATH_TO_FILE))
     
     # Changes TIME_ZONE
     time_zone = """TIME_ZONE = 'America/Chicago'"""
-    newTime_zone = """TIME_ZONE = 'America/""" + timeZone + touched_by_site_generator
+    newTime_zone = """TIME_ZONE = 'America/""" + timeZone + "'" + touched_by_site_generator
     replaceAll(settingsPath, time_zone, newTime_zone)
     
     # Create views.py for the site and adds some imports into it
@@ -104,6 +104,10 @@ from django.http import HttpResponseRedirect
 from django.core.urlresolvers import reverse
 from django.shortcuts import render_to_response
 from django.http import HttpResponseRedirect, HttpResponse, QueryDict
+
+# Dictionary to add objects passed to the through to the HTML
+script_args = {}
+
 """
     with open(appfolder + "/views.py", 'w+') as views_py:
         views_py.write(view_py_string)
@@ -136,10 +140,15 @@ def setup_templates(siteName, app_name):
     site_app_template_folder = template_folder + "/" + siteName
     app_template_folder = template_folder + "/" + app_name
     
-    old_templates = '# Put strings here, like "/home/html/django_templates" or "C:/www/django/templates".'
-    new_templates = "os.path.join(PATH_TO_FILE, 'templates'), " + touched_by_site_generator
+    old_templates = '''TEMPLATE_DIRS = (
+    # Put strings here, like "/home/html/django_templates" or "C:/www/django/templates".
+    # Always use forward slashes, even on Windows.
+    # Don't forget to use absolute paths, not relative paths.'''
+    new_templates = "\nos.path.join(PATH_TO_FILE, 'templates')," 
     
-    replaceAll(settingsPath, old_templates, new_templates)
+    file_insert_after(settingsPath, old_templates, 
+                     new_templates)
+    #replaceAll(settingsPath, old_templates, new_templates)
     
     # Create Templates Folder
     if ensure_dir(template_folder):
@@ -155,10 +164,10 @@ def setup_static(sitename):
     static_folder = siteFolder + "/static"
     
     old_static = '    # Put strings here, like "/home/html/static" or "C:/www/django/static".'
-    new_static = '    PATH_TO_FILE + "/static",' + touched_by_site_generator
+    new_static = '    PATH_TO_FILE + "/static",' 
     
     replaceAll(settingsPath, old_static, new_static)
-    
+        
     # Create Static Folder
     if ensure_dir(static_folder):
         os.makedirs(static_folder)    
@@ -190,9 +199,15 @@ def file_insert_after(file_name, search_string, insert_string):
     data = None
     with open (file_name, "r+") as myfile:
         data=myfile.read()    
-        insert_point = data.find(search_string) + len(search_string)    
-        data = data[:insert_point] + insert_string + data[insert_point:]        
-        myfile.write(data)
+        #insert_point = data.find(search_string) + len(search_string)   
+        #print data
+        #data = data[:insert_point] + insert_string + data[insert_point:]  
+        insert_point = data.find(search_string) + len(search_string)
+        myfile.seek(data.find(search_string) + len(search_string))   
+        end_data = myfile.read()
+        myfile.seek(insert_point)
+        myfile.write(insert_string + end_data)
+        #myfile.write(data)
 
 def generate_site():
     name = raw_input("Enter a Site Name: ")    
@@ -255,26 +270,28 @@ def setup_theme_and_homepage(sitename, app_name, path_to_theme_zip):
 
 urlpatterns = patterns('',"""
     insert = """
-    url(r'^$', '%s.views.home', name='home'),
-    """ % app_name
+    \n    url(r'^$', '%s.views.home', name='home'), \n""" % app_name
     file_insert_after(siteFolder + "/urls.py", search, 
                      insert)
 
     # Edits views.py to add home page method 
     home_method = """\n\ndef home(request):
-  return render_to_response("home/home.html", script_args)"""
+  return render_to_response("%s/home.html", script_args)""" % app_name
     file_insert_end(app_folder + "/views.py", home_method)
 
     # Create Basic home.html page
     home_html_file = siteFolder + "/templates/" + app_name + "/home.html"
     with open(home_html_file, "w+") as homeHTML:
         homeCode = """<html>
+        
+%s
+        
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<title>jQuery Mobile: Theme Download</title>
-	<link rel="stylesheet" href="themes/%s.min.css" />
-	<link rel="stylesheet" href="themes/jquery.mobile.icons.min.css" />
+	<link rel="stylesheet" href="%s" />
+	<link rel="stylesheet" href="%s" />
 	<link rel="stylesheet" href="http://code.jquery.com/mobile/1.4.5/jquery.mobile.structure-1.4.5.min.css" />
 	<script src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
 	<script src="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
@@ -287,7 +304,7 @@ urlpatterns = patterns('',"""
 		<div data-role="content" data-theme="a">
 			<p>Your theme was successfully downloaded. You can use this page as a reference for how to link it up!</p>
 			<pre>
-<strong>&lt;link rel=&quot;stylesheet&quot; href=&quot;themes/%s.min.css&quot; /&gt;</strong>
+<strong>&lt;link rel=&quot;stylesheet&quot; href=&quot;themes/min.css&quot; /&gt;</strong>
 <strong>&lt;link rel=&quot;stylesheet&quot; href=&quot;themes/jquery.mobile.icons.min.css&quot; /&gt;</strong>
 &lt;link rel=&quot;stylesheet&quot; href=&quot;http://code.jquery.com/mobile/1.4.5/jquery.mobile.structure-1.4.5.min.css&quot; /&gt;
 &lt;script src=&quot;http://code.jquery.com/jquery-1.11.1.min.js&quot;&gt;&lt;/script&gt;
@@ -306,7 +323,7 @@ urlpatterns = patterns('',"""
 		</div>
 	</div>
 </body>
-</html>""" % (theme_name, theme_name)
+</html>""" % ('{% load staticfiles %}', '{% static "'+ app_name + '/themes/'+ theme_name +'.min.css" %}' ,'{% static "'+ app_name +'/themes/jquery.mobile.icons.min.css" %}')
         homeHTML.write(homeCode)
 
 if __name__ == '__main__':
