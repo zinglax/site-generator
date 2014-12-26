@@ -88,7 +88,7 @@ script_args['theme'] = "a"
         
     # Setup Static here
     if ensure_dir(static_folder):
-        os.makedirs(static_folder)    
+        os.makedirs(static_folder)   
 
     # Copy Defalut settings.py to new sites settings.py
     command = "cp " + dname + "/defaultFiles/settings.py " + settingsPath
@@ -156,7 +156,7 @@ urlpatterns = patterns('',"""
     subprocess.call(command2, shell=True)
     
     # Edits data to reflect site name, app name, and theme name where appropriate
-    replace_list = [sitename, app_name, theme_name, app_name]
+    replace_list = [sitename, theme_name]
     file_replace_with_list(templates_folder + "base.html", replace_list)
     
     replace_list = [app_name]
@@ -176,6 +176,7 @@ def file_insert_end(file_name, insert_string):
         #data=myfile.read()              
         #data = data + insert_string         
         myfile.write(insert_string)
+        myfile.close()
             
 
 def replaceAll(file_name,searchExp,replaceExp):
