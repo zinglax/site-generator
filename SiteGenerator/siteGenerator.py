@@ -49,6 +49,8 @@ def setup_django_site(site_name, app_name, time_zone, db_type, media_root= 'PATH
             # Site has already been created, create the App!
             command = "python manage.py startapp " + app_name
             os.system(command)   
+            
+            print "## CREATED APP: " + app_name
 
             # Can Be done with file_replace_with_list at the end
             #old_app_string = """    # 'django.contrib.admindocs',"""
@@ -72,7 +74,9 @@ from django.http import HttpResponseRedirect, HttpResponse, QueryDict
 script_args = {}
 script_args['theme'] = "a"
     """    
-    with open(appFolder + "/views.py", 'r+') as views_py:
+    
+    
+    with open(appFolder + "/views.py", 'w+') as views_py:
         views_py.write(view_py_string)
         views_py.close()
         
