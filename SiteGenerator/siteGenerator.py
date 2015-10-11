@@ -203,6 +203,7 @@ def file_insert_after(file_name, search_string, insert_string):
         myfile.seek(insert_point)
         myfile.write(insert_string + end_data)
         #myfile.write(data)
+        myfile.close()
 
 
 def file_replace_with_list(file_name, replace_list):
@@ -240,10 +241,10 @@ def generate_site():
         theme_path = raw_input("Enter the where your theme .zip file is (the one Downloaded from ThemeRoller): ")
         setup_theme_and_homepage(name, app_name, theme_path)
 
-
+	
     
     
-    
+    print "Radical, I think you just generated a site"
     
 if __name__ == '__main__':
         generate_site()
