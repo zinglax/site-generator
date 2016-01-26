@@ -175,6 +175,7 @@ def file_insert_beginning(file_name, insertString):
         sys.stdout.write(line)           
 
 def file_insert_end(file_name, insert_string):
+    ''' Inserts someting in the end of the file'''
     data = None
     with open (file_name, "a+") as myfile:
         #data=myfile.read()              
@@ -235,7 +236,7 @@ def generate_site():
                      database_type)
     
     # Setting up Theme and new homepage
-    decision = raw_input("Would you like to set up a them and homepage? [Y/n]") or "Y"
+    decision = raw_input("Would you like to set up a theme and homepage? [Y/n]") or "Y"
     if decision in {'Y','yes','Yes','YES',"ya","yeah",'y'}:
         print "You decided to setup a theme and homepage, sweet!"
         theme_path = raw_input("Enter the where your theme .zip file is (the one Downloaded from ThemeRoller): ")
